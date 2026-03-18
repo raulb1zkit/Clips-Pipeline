@@ -1,0 +1,18 @@
+# Entorno y secretos
+.env
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Datos generados (no versionar)
+cache/
+output/
+
+# Assets propios (no versionar por defecto)
+assets/logo.png
+assets/lower_third.png
+
+# IDEs
+.vscode/
+.idea/

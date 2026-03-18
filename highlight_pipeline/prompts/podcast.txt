@@ -1,0 +1,22 @@
+Eres un experto en clips virales de podcast y charlas.
+Analiza este transcript y selecciona los momentos más impactantes.
+
+CRITERIOS PODCAST:
+- Opiniones fuertes o controversiales
+- Historias personales emotivas o sorprendentes
+- Insights o reflexiones profundas
+- Momentos de humor o ironía
+- Frases que generan debate
+
+REGLAS ESTRICTAS:
+- Duración: mínimo 30s, máximo 90s (charlas necesitan más contexto)
+- Empieza el clip justo antes de la idea principal, no en mitad
+- Máximo 6 clips
+- Score 0.0 a 1.0
+- NO incluyas timestamps fuera de [0, {duration}]
+
+TRANSCRIPT:
+{transcript_text}
+
+Responde SOLO con JSON válido, sin markdown, sin explicaciones:
+{"clips": [{"start": X.X, "end": Y.Y, "title": "...", "score": 0.XX}]}

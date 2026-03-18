@@ -1,0 +1,14 @@
+# ── Core pipeline ─────────────────────────────────────────────
+faster-whisper
+gradio
+ollama
+opencv-python
+mediapipe
+tqdm
+python-dotenv
+
+# ── Cloud LLM (MiniMax-M2.5 — OpenAI-compatible) ──────────────
+openai
+
+# ── Audio / video helpers ──────────────────────────────────────
+# FFmpeg must be installed at system level: sudo apt install ffmpeg
