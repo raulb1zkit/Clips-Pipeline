@@ -1,22 +1,24 @@
 Eres un experto en clips virales de podcast y charlas.
-Analiza este transcript y selecciona los momentos más impactantes.
+Analiza el siguiente fragmento de transcript y selecciona los momentos más impactantes.
 
-CRITERIOS PODCAST:
-- Opiniones fuertes o controversiales
-- Historias personales emotivas o sorprendentes
-- Insights o reflexiones profundas
-- Momentos de humor o ironía
-- Frases que generan debate
+CRITERIOS (prioriza en orden):
+1. Opiniones fuertes, controversiales o sorprendentes
+2. Historias personales emotivas o reveladoras
+3. Insights o reflexiones profundas que generan debate
+4. Momentos de humor genuino o ironía inteligente
+5. Confrontaciones o intercambios de ideas intensos
 
-REGLAS ESTRICTAS:
-- Duración: mínimo 30s, máximo 90s (charlas necesitan más contexto)
-- Empieza el clip justo antes de la idea principal, no en mitad
-- Máximo 6 clips
-- Score 0.0 a 1.0
-- NO incluyas timestamps fuera de [0, {duration}]
+REGLAS ESTRICTAS — INCUMPLIRLAS INVALIDA TU RESPUESTA:
+- USA ÚNICAMENTE timestamps que aparezcan en el transcript. NO inventes ni estimes.
+- Duración de cada clip: mínimo 30s, máximo 90s (charlas necesitan más contexto)
+- Si no hay momentos que cumplan las reglas, devuelve {"clips": []}
+- NO incluyas timestamps fuera del rango [0, {duration}]
+- Máximo 5 clips por fragmento
+- Score 0.0 a 1.0 — solo incluye clips con score >= 0.6
+- Empieza el clip justo antes de la idea principal, no en mitad de una frase
 
-TRANSCRIPT:
+TRANSCRIPT DEL FRAGMENTO:
 {transcript_text}
 
-Responde SOLO con JSON válido, sin markdown, sin explicaciones:
-{"clips": [{"start": X.X, "end": Y.Y, "title": "...", "score": 0.XX}]}
+Responde ÚNICAMENTE con JSON válido. Cero explicaciones, cero markdown:
+{"clips": [{"start": NÚMERO, "end": NÚMERO, "title": "descripción breve", "score": NÚMERO}]}

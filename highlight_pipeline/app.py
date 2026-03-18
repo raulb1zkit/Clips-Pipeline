@@ -45,7 +45,7 @@ def _cached(filename: str, fn, *args, force: bool = False):
 # ──────────────────────────────────────────────────────────────
 
 def run_pipeline(video_file, content_type, llm_provider,
-                 min_dur, max_dur, force_retranscribe,
+                 min_dur, max_dur, max_clips, force_retranscribe,
                  progress=gr.Progress()):
 
     if video_file is None:
@@ -66,14 +66,19 @@ def run_pipeline(video_file, content_type, llm_provider,
         force=force_retranscribe,
     )
 
-    # Fase 3 — Análisis LLM
+    # Fase 3 — Análisis LLM (limpiamos candidatos anteriores antes de generar)
+    candidates_path = os.path.join(os.getenv("CACHE_DIR", "cache"), "candidates.json")
+    if os.path.exists(candidates_path):
+        os.remove(candidates_path)
     progress(0.45, desc=f"Analizando con {llm_provider}...")
     candidates = generate_candidates(transcript, content_type, provider=provider)
-    _save_json(candidates, os.path.join(os.getenv("CACHE_DIR", "cache"), "candidates.json"))
+    _save_json(candidates, candidates_path)
 
     # Fase 4 — Validación
     progress(0.55, desc="Validando clips...")
-    validated = validate(candidates, transcript, min_dur=float(min_dur), max_dur=float(max_dur))
+    validated = validate(candidates, transcript,
+                         min_dur=float(min_dur), max_dur=float(max_dur),
+                         max_clips=int(max_clips))
     _save_json(validated, os.path.join(os.getenv("CACHE_DIR", "cache"), "validated.json"))
 
     n_valid = len(validated["clips"])
@@ -134,6 +139,7 @@ with gr.Blocks(title="🎬 Highlight Pipeline") as demo:
         with gr.Column():
             min_dur = gr.Slider(10, 60,  value=20, step=5, label="Duración mínima (s)")
             max_dur = gr.Slider(30, 120, value=60, step=5, label="Duración máxima (s)")
+            max_clips = gr.Slider(2, 8, value=5, step=1, label="Máx. clips a generar")
             force_retranscribe = gr.Checkbox(
                 label="Forzar re-transcripción (ignora caché)",
                 value=False
@@ -145,7 +151,7 @@ with gr.Blocks(title="🎬 Highlight Pipeline") as demo:
 
     run_btn.click(
         fn=run_pipeline,
-        inputs=[video_in, content_type, llm_provider, min_dur, max_dur, force_retranscribe],
+        inputs=[video_in, content_type, llm_provider, min_dur, max_dur, max_clips, force_retranscribe],
         outputs=[output_files, status_md]
     )
 

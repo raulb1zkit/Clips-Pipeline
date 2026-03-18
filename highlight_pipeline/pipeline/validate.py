@@ -37,7 +37,7 @@ def overlaps(a: dict, b: dict) -> bool:
 
 def validate(candidates: dict, transcript: dict,
              min_dur: float = 15.0, max_dur: float = 90.0,
-             margin: float = 2.0) -> dict:
+             margin: float = 2.0, max_clips: int = 5) -> dict:
     """
     Valida y corrige los clips propuestos por el LLM.
 
@@ -47,6 +47,7 @@ def validate(candidates: dict, transcript: dict,
       3. Snap to ASR      — alinea a bordes reales de segmentos de transcripción
       4. Margin expansion — añade 'margin' segundos de contexto natural
       5. Overlap removal  — elimina solapamientos, conserva mayor score
+      6. Top-N cap        — devuelve como máximo 'max_clips' clips
 
     Args:
         candidates: salida cruda del LLM — {clips: [...]}
@@ -54,6 +55,7 @@ def validate(candidates: dict, transcript: dict,
         min_dur:    duración mínima válida (s)
         max_dur:    duración máxima válida (s)
         margin:     segundos de margen a añadir en cada extremo
+        max_clips:  número máximo de clips a devolver (los de mayor score)
 
     Returns:
         {clips: [...]} — clips validados, ordenados por tiempo, sin solapamientos
@@ -94,6 +96,9 @@ def validate(candidates: dict, transcript: dict,
     for clip in valid:
         if not any(overlaps(clip, kept) for kept in no_overlap):
             no_overlap.append(clip)
+
+    # 6. Top-N cap — quedarse solo con los mejores clips
+    no_overlap = no_overlap[:max_clips]
 
     # Ordenar cronológicamente para el procesado posterior
     no_overlap.sort(key=lambda x: x["start"])

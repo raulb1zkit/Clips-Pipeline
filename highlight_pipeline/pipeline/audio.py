@@ -2,6 +2,7 @@
 pipeline.audio — Fase 1: Extracción de audio del vídeo de entrada.
 """
 import subprocess
+import shutil
 import os
 
 
@@ -17,8 +18,13 @@ def extract_audio(video_path: str, output_path: str = "cache/audio.wav") -> str:
         output_path — ruta al fichero de audio generado
     """
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    ffmpeg = shutil.which("ffmpeg")
+    if ffmpeg is None:
+        raise RuntimeError(
+            "ffmpeg not found. Install it with: sudo apt install ffmpeg"
+        )
     cmd = [
-        "ffmpeg", "-i", video_path,
+        ffmpeg, "-i", video_path,
         "-ac", "1",          # mono — ASR más estable
         "-ar", "16000",      # 16 kHz — estándar Whisper
         "-vn",               # sin vídeo

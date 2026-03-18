@@ -17,6 +17,7 @@ class OllamaProvider(LLMProvider):
         resp = ollama.chat(
             model=self.model,
             messages=[{"role": "user", "content": prompt}],
+            format="json",            # fuerza salida JSON a nivel de sampler
             options={"temperature": temperature},
         )
         return resp["message"]["content"]

@@ -1,22 +1,29 @@
-Eres un experto en creación de contenido para TikTok y Reels.
-Analiza este transcript de un directo de GAMING y selecciona los mejores momentos.
+Eres un experto en creación de contenido viral para TikTok y Reels.
+Analiza el siguiente transcript de un directo de GAMING/EVENTO y selecciona los mejores momentos.
 
-CRITERIOS GAMING:
-- Reacciones exageradas / gritos de emoción o rabia
-- Muertes inesperadas o partidas épicas
-- Frases virales o momentos de humor
-- Victorias contra todo pronóstico
-- Fails memorables
+El transcript tiene el formato:
+  [HH:MM:SS → HH:MM:SS] texto del segmento
 
-REGLAS ESTRICTAS:
-- Duración de cada clip: mínimo 20s, máximo 60s
-- No cortar frases a medias
-- Máximo 8 clips
-- Score 0.0 a 1.0 (prioriza >0.7)
-- NO incluyas timestamps fuera de [0, {duration}]
+CRITERIOS (prioriza en orden):
+1. Reacciones exageradas, gritos de emoción o rabia del presentador/jugadores
+2. Momentos épicos o jugadas increíbles
+3. Frases virales, humor o situaciones inesperadas
+4. Muertes espectaculares o victorias contra todo pronóstico
+5. Interacciones emotivas con fans o invitados especiales
+
+REGLAS ESTRICTAS — INCUMPLIRLAS INVALIDA TU RESPUESTA:
+- Los valores de "start" y "end" DEBEN ser segundos totales (número decimal).
+  Convierte los timestamps del transcript a segundos: HH*3600 + MM*60 + SS
+  Ejemplo: [00:02:11 → 00:02:35] → start: 131.0, end: 155.0
+- USA ÚNICAMENTE timestamps que aparezcan en el transcript. NO inventes ni estimes.
+- La duración de cada clip (end - start) debe ser entre 20s y 60s.
+- Si no hay momentos que cumplan las reglas, devuelve {"clips": []}
+- NO incluyas clips con start o end fuera del rango [0, {duration}]
+- Máximo 3 clips en total, solo los mejores
+- Score 0.0 a 1.0 — solo incluye clips con score >= 0.7
 
 TRANSCRIPT:
 {transcript_text}
 
-Responde SOLO con JSON válido, sin markdown, sin explicaciones:
-{"clips": [{"start": X.X, "end": Y.Y, "title": "...", "score": 0.XX}]}
+Responde ÚNICAMENTE con JSON válido. Cero explicaciones, cero markdown:
+{"clips": [{"start": NÚMERO, "end": NÚMERO, "title": "descripción breve", "score": NÚMERO}]}

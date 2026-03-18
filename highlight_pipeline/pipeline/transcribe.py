@@ -2,6 +2,21 @@
 pipeline.transcribe — Fase 2: Transcripción ASR con faster-whisper.
 """
 import os
+import ctypes
+
+# faster-whisper needs libcublas.so.12 but it is not in a standard system path
+# on this machine. Ollama bundles it under cuda_v12 — add that to LD_LIBRARY_PATH
+# so the dynamic linker can find it before the module is imported.
+_OLLAMA_CUDA12 = "/usr/local/lib/ollama/cuda_v12"
+_ldpath = os.environ.get("LD_LIBRARY_PATH", "")
+if _OLLAMA_CUDA12 not in _ldpath.split(":"):
+    os.environ["LD_LIBRARY_PATH"] = f"{_OLLAMA_CUDA12}:{_ldpath}" if _ldpath else _OLLAMA_CUDA12
+    # Force the dynamic linker to pick up the new path for subsequent dlopen calls
+    try:
+        ctypes.CDLL(f"{_OLLAMA_CUDA12}/libcublas.so.12")
+    except OSError:
+        pass  # Will fail gracefully; the env var set above still helps child processes
+
 from faster_whisper import WhisperModel
 
 
